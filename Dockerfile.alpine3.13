@@ -1,0 +1,14 @@
+FROM alpine:3.13
+LABEL "maintainer"="vital987<apoorvvyavahare@pm.me>"
+ENV LANG=en_US.UTF-8 \
+	LANGUAGE=en_US.UTF-8 \
+	LC_ALL=C.UTF-8 \
+	TZ="Asia/Kolkata"
+SHELL ["/bin/bash", "-c"]
+RUN apk add --update \
+	tzdata \
+	supervisor && \
+	mkdir -p /config/supervisor && \
+	echo -e "[supervisord]\nuser = root\nnodaemon=true\n\n[include]\nfiles = /config/supervisor/*.conf" > /config/supervisord.conf && \
+	rm -rf /tmp/* /var/cache/apk/*
+CMD ["supervisord", "-c", "/config/supervisord.conf"]
